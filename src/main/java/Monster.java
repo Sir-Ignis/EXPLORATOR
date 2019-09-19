@@ -6,14 +6,21 @@ public class Monster
     private int ATK;
     private int DEF;
     private int SP;
+    public int XP;
+    public int xCord;
+    public int yCord;
 
-    public Monster(String pName, int pHP, int pMP, int pATK, int pDEF, int pSP) {
+    //Constructor: initializes the name, hp, mp, atk, def and special attack and position of the monster
+    public Monster(String pName, int pHP, int pMP, int pATK, int pDEF, int pSP, int XP, int xCord, int yCord) {
         name = pName;
         HP = pHP;
         MP = pMP;
         ATK = pATK;
         DEF = pDEF;
         SP = pSP;
+        this.XP = XP;
+        this.xCord = xCord;
+        this.yCord = yCord;
     }
 
     /*BEGIN GET/SET METHODS*/
@@ -65,4 +72,13 @@ public class Monster
         this.SP = SP;
     }
     /* END OF get/set methods*/
+
+    //determines monster damage based on player def
+    public int atkDMG(int DEF) {
+        int DMG = ATK-DEF;
+        if(DMG < 0 ) {
+            return 0;
+        }
+        return DMG;
+    }
 }

@@ -7,6 +7,7 @@ public class Player {
     //Player fields: all fields apart from Inventory initialized in constructor
     private String name;
     private int HP, MP, SP, ATK, DEF, INT, STR, DEX, AGT, CHR;
+    public int XP;
     private ArrayList<Item> Inventory;
     private ArrayList<Item> EquippedItems;
 
@@ -30,6 +31,7 @@ public class Player {
         name = pName;
         HP = MP = 10;
         SP = 0;
+        XP = 0;
         ATK = DEF = INT = STR = DEX = AGT = CHR = 1;
         EquippedItems = new ArrayList<Item>() {{
             add(null);add(null);add(null);add(null);add(null);add(null);add(null);
@@ -169,8 +171,34 @@ public class Player {
         }
     }
 
+    /*prints equipped items
+    slot ref: helmet, necklace, body armour, ring/weapon/shield, ring/weapon/shield, leg armour, shoes*/
+    public void printEqItems() {
+        int equipped = 0;
+        for(int i = 0; i < EquippedItems.size(); i++) {
+            if(EquippedItems.get(i)!=null) {
+                equipped++;
+                System.out.println("You have a "+EquippedItems.get(i).getName()+" equipped.");
+            }
+        }
+        if(equipped == 0) {
+            System.out.println("You have nothing equipped!");
+        }else {
+            System.out.println("You currently have "+equipped+" items equipped.");
+        }
+    }
+
     //adds item to inventory
     public void addItemToInv(Item item) {
         Inventory.add(item);
+    }
+
+    //calculates the player damage after attack based on monster def
+    public int atkDamage(int DEF) {
+        int DMG = ATK-DEF;
+        if(DMG < 0 ) {
+            return 0;
+        }
+        return DMG;
     }
 }

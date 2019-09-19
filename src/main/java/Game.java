@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class Game {
+    //the initial room is cave_floor0
     private Room cave_floor0;
     private Player player;
     private Action action = new Action();
@@ -55,13 +56,14 @@ public class Game {
     //initialize monsters of cave floor 0
     private ArrayList<Monster> initializeMonsters() {
         ArrayList<Monster> Monsters = new ArrayList<Monster>();
-        Monster skeleton = new Monster("Skeleton", 5, 0, 2,0,0);
-        Monster ghoul = new Monster("Ghoul",7,3,2,1,0);
+        Monster skeleton = new Monster("Skeleton", 5, 0, 2,0,0, 5, 3, 2);
+        Monster ghoul = new Monster("Ghoul",7,3,2,1,0, 10, 7, 4);
         Monsters.add(skeleton);
         Monsters.add(ghoul);
         return Monsters;
     }
 
+    //methods to move the player, or not if the player chooses not to by entering -1
     public void movePlayer() {
         int move = -1; //used to store the player move direction
         int change = 0; //used to determine the new cell loc of player
@@ -90,6 +92,16 @@ public class Game {
             if(cave_floor0.containsChar(cave_floor0.ITEM, tmpY, tmpX)==1) {
                 givePlayerItem(tmpX, tmpY);
             }
+            if(cave_floor0.containsChar(cave_floor0.MONSTER, tmpY, tmpX)==1) {
+                Monster monster = cave_floor0.getMonster(tmpX, tmpY);
+                if(monster != null) {
+                    player = action.Fight(player, monster);
+                    if(player.getHP()<=0) {
+                        System.out.println("Game over!");
+                        System.exit(0);
+                    }
+                }
+            }
             if(cave_floor0.updateMap(playerX, playerY, tmpX, tmpY)==1) {
                 playerX = newX = tmpX;
                 playerY = newY = tmpY;
@@ -101,6 +113,7 @@ public class Game {
         }while(move!=-1);
     }
 
+    //adds an item to the player's inventory and removes the item from the map
     public void givePlayerItem(int y, int x) {
         for(int i = 0; i < cave_floor0.getItems().size(); i++) {
             if(cave_floor0.getItems().get(i).item_xCord == x && cave_floor0.getItems().get(i).item_yCord == y) {
@@ -111,6 +124,7 @@ public class Game {
         }
     }
 
+    //used to initialize the environment before start() is called
     public Game() {
         player = Player.getInstance("default");
         player.setInventory(starterItems());
@@ -123,6 +137,7 @@ public class Game {
         cave_floor0.mapInfo();*/
     }
 
+    //the main game loop
     public void start() {
         System.out.println("You find yourself in a dark cave.");
         System.out.println(cave_floor0.getDescription());
@@ -134,7 +149,14 @@ public class Game {
                     movePlayer();
                     break;
                 case 1:
+                    player.printInventory();
+                    break;
+                case 2:
                     action.equipItem(player.getInventory(),player.getEquippedItems());
+                    break;
+                case 3:
+                    player.printEqItems();
+                    break;
             }
         }while(choice != -1);
     }

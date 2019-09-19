@@ -86,6 +86,8 @@ public class Room {
         }
         return 0;
     }
+
+    //prints out the positions of the player, monsters and items (useful for debugging)
     public void mapInfo() {
         for (int i = 0; i < Map.length; i++) {
             for (int j = 0; j < Map.length; j++) {
@@ -121,5 +123,16 @@ public class Room {
             System.out.println("ERROR (player not located here): You cannot move from there.");
         }
         return 0;
+    }
+
+    //returns the monster at the specific location
+    public Monster getMonster(int y, int x) {
+        for(int i = 0; i < monsters.size(); i++) {
+            if(monsters.get(i).xCord == x && monsters.get(i).yCord == y) {
+                return monsters.get(i);
+            }
+        }
+        System.out.println("Monster at ("+x+','+y+") not found!");
+        return null;
     }
 }
